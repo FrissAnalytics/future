@@ -50,6 +50,10 @@ tweak.future <- function(strategy, ..., penvir=parent.frame()) {
     stop("Additional arguments to tweak() must be named.")
   }
 
+  ## ARGUMENTS THAT MUST NOT BE TWEAKED
+  if ("run" %in% names) {
+    stop("Future argument 'run' must not be tweaked.")
+  }
 
   ## formals()<- drops any attributes including class
   attrs <- attributes(strategy)

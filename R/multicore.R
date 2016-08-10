@@ -16,6 +16,7 @@
 #' @param workers The maximum number of multicore futures that can
 #' be active at the same time before blocking.
 #' @param earlySignal Specified whether conditions should be signaled as soon as possible or not.
+#' @param run If TRUE, the future is also launched, otherwise nit.
 #' @param \dots Not used.
 #'
 #' @return A \link{MulticoreFuture}
@@ -59,7 +60,7 @@
 #' system.
 #'
 #' @export
-multicore <- function(expr, envir=parent.frame(), substitute=TRUE, globals=TRUE, workers=availableCores(constraints="multicore"), earlySignal=FALSE, ...) {
+multicore <- function(expr, envir=parent.frame(), substitute=TRUE, globals=TRUE, workers=availableCores(constraints="multicore"), earlySignal=FALSE, run=TRUE, ...) {
   ## BACKWARD COMPATIBILITY
   args <- list(...)
   if ("maxCores" %in% names(args)) {
@@ -76,14 +77,17 @@ multicore <- function(expr, envir=parent.frame(), substitute=TRUE, globals=TRUE,
   ## Eager futures best reflect how multicore futures handle globals.
   if (workers == 1L || !supportsMulticore()) {
     ## covr: skip=1
-    return(eager(expr, envir=envir, substitute=FALSE, globals=globals, local=TRUE))
+    return(eager(expr, envir=envir, substitute=FALSE, globals=globals, local=TRUE, run=run))
   }
 
   oopts <- options(mc.cores=workers)
   on.exit(options(oopts))
 
   future <- MulticoreFuture(expr=expr, envir=envir, substitute=FALSE, globals=globals, workers=workers, earlySignal=earlySignal)
-  run(future)
+  
+  if (run) run(future)
+  
+  future
 }
 class(multicore) <- c("multicore", "multiprocess", "future", "function")
 

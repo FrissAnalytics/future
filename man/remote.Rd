@@ -6,7 +6,7 @@
 \usage{
 remote(expr, envir = parent.frame(), substitute = TRUE, globals = TRUE,
   persistent = TRUE, workers = NULL, gc = FALSE, earlySignal = FALSE,
-  myip = NULL, ...)
+  myip = NULL, run = TRUE, ...)
 }
 \arguments{
 \item{expr}{An R \link[base]{expression}.}
@@ -35,6 +35,8 @@ evaluated the future) after the value of the future is collected.}
 
 \item{myip}{The external IP address of this machine.
 If NULL, then it is inferred using an online service (default).}
+
+\item{run}{If TRUE, the future is also launched, otherwise nit.}
 
 \item{\dots}{Not used.}
 }

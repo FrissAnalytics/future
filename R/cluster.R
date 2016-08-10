@@ -20,6 +20,7 @@
 #' @param gc If TRUE, the garbage collector run (in the process that
 #' evaluated the future) after the value of the future is collected.
 #' @param earlySignal Specified whether conditions should be signaled as soon as possible or not.
+#' @param run If TRUE, the future is also launched, otherwise nit.
 #' @param \dots Not used.
 #'
 #' @return A \link{ClusterFuture}.
@@ -38,7 +39,7 @@
 #' and \code{\link{\%<=\%}} will create \emph{cluster futures}.
 #'
 #' @export
-cluster <- function(expr, envir=parent.frame(), substitute=TRUE, globals=TRUE, persistent=FALSE, workers=NULL, gc=FALSE, earlySignal=FALSE, ...) {
+cluster <- function(expr, envir=parent.frame(), substitute=TRUE, globals=TRUE, persistent=FALSE, workers=NULL, gc=FALSE, earlySignal=FALSE, run=TRUE, ...) {
   ## BACKWARD COMPATIBILITY
   args <- list(...)
   if ("cluster" %in% names(args)) {
@@ -49,6 +50,8 @@ cluster <- function(expr, envir=parent.frame(), substitute=TRUE, globals=TRUE, p
   if (substitute) expr <- substitute(expr)
 
   future <- ClusterFuture(expr=expr, envir=envir, substitute=FALSE, globals=globals, persistent=persistent, workers=workers, gc=gc, earlySignal=earlySignal, ...)
-  run(future)
+  if (run) run(future)
+  
+  future
 }
 class(cluster) <- c("cluster", "multiprocess", "future", "function")

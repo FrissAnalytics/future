@@ -18,6 +18,7 @@
 #' the point of time when the future is created, otherwise they are
 #' resolved when the future is resolved.
 #' @param earlySignal Specified whether conditions should be signaled as soon as possible or not.
+#' @param run If TRUE, the future is also launched, otherwise nit.
 #' @param \dots Not used.
 #'
 #' @return A \link{LazyFuture}.
@@ -32,11 +33,15 @@
 #' \emph{lazy futures}.
 #'
 #' @export
-lazy <- function(expr, envir=parent.frame(), substitute=TRUE, globals=TRUE, local=TRUE, earlySignal=FALSE, ...) {
+lazy <- function(expr, envir=parent.frame(), substitute=TRUE, globals=TRUE, local=TRUE, earlySignal=FALSE, run=FALSE, ...) {
   if (substitute) expr <- substitute(expr)
   local <- as.logical(local)
 
-  LazyFuture(expr=expr, envir=envir, local=local, globals=globals, earlySignal=earlySignal)
+  future <- LazyFuture(expr=expr, envir=envir, local=local, globals=globals, earlySignal=earlySignal)
+  
+  if (run) run(future)
+  
+  future
 }
 class(lazy) <- c("lazy", "uniprocess", "future", "function")
 

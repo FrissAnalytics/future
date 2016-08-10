@@ -6,7 +6,7 @@
 \usage{
 multicore(expr, envir = parent.frame(), substitute = TRUE, globals = TRUE,
   workers = availableCores(constraints = "multicore"), earlySignal = FALSE,
-  ...)
+  run = TRUE, ...)
 }
 \arguments{
 \item{expr}{An R \link[base]{expression}.}
@@ -26,6 +26,8 @@ located, an informative error is generated.}
 be active at the same time before blocking.}
 
 \item{earlySignal}{Specified whether conditions should be signaled as soon as possible or not.}
+
+\item{run}{If TRUE, the future is also launched, otherwise nit.}
 
 \item{\dots}{Not used.}
 }

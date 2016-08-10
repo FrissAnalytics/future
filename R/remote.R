@@ -22,6 +22,7 @@
 #' @param earlySignal Specified whether conditions should be signaled as soon as possible or not.
 #' @param myip The external IP address of this machine.
 #' If NULL, then it is inferred using an online service (default).
+#' @param run If TRUE, the future is also launched, otherwise nit.
 #' @param \dots Not used.
 #'
 #' @return A \link{ClusterFuture}.
@@ -32,7 +33,7 @@
 #' Note that remote futures use \code{persistent=TRUE} by default.
 #'
 #' @export
-remote <- function(expr, envir=parent.frame(), substitute=TRUE, globals=TRUE, persistent=TRUE, workers=NULL, gc=FALSE, earlySignal=FALSE, myip=NULL, ...) {
+remote <- function(expr, envir=parent.frame(), substitute=TRUE, globals=TRUE, persistent=TRUE, workers=NULL, gc=FALSE, earlySignal=FALSE, myip=NULL, run=TRUE, ...) {
   if (substitute) expr <- substitute(expr)
 
   stopifnot(length(workers) >= 1L, is.character(workers), !anyNA(workers))
@@ -73,6 +74,9 @@ remote <- function(expr, envir=parent.frame(), substitute=TRUE, globals=TRUE, pe
   }
 
   future <- ClusterFuture(expr=expr, envir=envir, substitute=FALSE, globals=globals, persistent=persistent, workers=workers, gc=gc, earlySignal=earlySignal, ...)
-  run(future)
+  
+  if (run) run(future)
+  
+  future
 }
 class(remote) <- c("remote", "multiprocess", "future", "function")

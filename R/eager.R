@@ -19,6 +19,7 @@
 #' all assignments are done to local temporary environment, otherwise
 #' the assignments are done in the calling environment.
 #' @param earlySignal Specified whether conditions should be signaled as soon as possible or not.
+#' @param run If TRUE, the future is also launched, otherwise nit.
 #' @param \dots Not used.
 #'
 #' @return An \link{EagerFuture}.
@@ -43,12 +44,15 @@
 #' @aliases transparent
 #' @export transparent
 #' @export
-eager <- function(expr, envir=parent.frame(), substitute=TRUE, globals=TRUE, local=TRUE, earlySignal=FALSE, ...) {
+eager <- function(expr, envir=parent.frame(), substitute=TRUE, globals=TRUE, local=TRUE, earlySignal=FALSE, run=TRUE, ...) {
   if (substitute) expr <- substitute(expr)
   local <- as.logical(local)
 
   future <- EagerFuture(expr=expr, envir=envir, substitute=FALSE, globals=globals, local=local, earlySignal=earlySignal)
-  run(future)
+  
+  if (run) run(future)
+  
+  future
 }
 class(eager) <- c("eager", "uniprocess", "future", "function")
 

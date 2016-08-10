@@ -6,7 +6,7 @@
 \usage{
 cluster(expr, envir = parent.frame(), substitute = TRUE, globals = TRUE,
   persistent = FALSE, workers = NULL, gc = FALSE, earlySignal = FALSE,
-  ...)
+  run = TRUE, ...)
 }
 \arguments{
 \item{expr}{An R \link[base]{expression}.}
@@ -32,6 +32,8 @@ from objects prior to the evaluation of the future.}
 evaluated the future) after the value of the future is collected.}
 
 \item{earlySignal}{Specified whether conditions should be signaled as soon as possible or not.}
+
+\item{run}{If TRUE, the future is also launched, otherwise nit.}
 
 \item{\dots}{Not used.}
 }
