@@ -45,7 +45,7 @@ for (cores in 1:min(3L, availableCores())) {
       rm(list="a")
 
       res <- try(y, silent=TRUE)
-      if (method == "conservative" && strategy %in% c("lazy", "multisession")) {
+      if (method == "conservative" && (strategy %in% c("lazy", "multisession") || (strategy == "multicore" && cores == 1L))) {
         str(list(res=res))
         stopifnot(inherits(res, "try-error"))
       } else {
@@ -66,7 +66,7 @@ for (cores in 1:min(3L, availableCores())) {
       rm(list="a")
 
       res <- try(unlist(res), silent=TRUE)
-      if (method == "conservative" && strategy %in% c("lazy", "multisession")) {
+      if (method == "conservative" && (strategy %in% c("lazy", "multisession") || (strategy == "multicore" && cores == 1L))) {
         str(list(res=res))
         stopifnot(inherits(res, "try-error"))
       } else {

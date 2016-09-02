@@ -9,7 +9,7 @@ for (cores in 1:min(3L, availableCores("multicore"))) {
   options(mc.cores=cores-1L)
 
   if (!supportsMulticore()) {
-    message(sprintf("Multicore futures are not supporting on '%s'. Falling back to use synchroneous eager futures", .Platform$OS.type))
+    message(sprintf("Multicore futures are not supporting on '%s'. Falling back to use synchroneous lazy futures", .Platform$OS.type))
   }
 
   for (globals in c(FALSE, TRUE)) {
@@ -19,7 +19,7 @@ for (cores in 1:min(3L, availableCores("multicore"))) {
   f <- multicore({
     42L
   }, globals=globals)
-  stopifnot(inherits(f, "MulticoreFuture") || ((cores ==1 || !supportsMulticore()) && inherits(f, "EagerFuture")))
+  stopifnot(inherits(f, "MulticoreFuture") || ((cores == 1 || !supportsMulticore()) && inherits(f, "LazyFuture")))
 
   print(resolved(f))
   y <- value(f)
@@ -46,7 +46,11 @@ for (cores in 1:min(3L, availableCores("multicore"))) {
 ##  if ("covr" %in% loadedNamespaces()) v <- 0 else ## WORKAROUND
   v <- value(f)
   print(v)
-  stopifnot(v == 0)
+  if (globals || inherits(f, "MulticoreFuture")) {
+    stopifnot(v == 0)
+  } else {
+    stopifnot(v == 42) ## Because lazy evaluation w/out freezing globals
+  }
 
 
   message(sprintf("*** multicore(..., globals=%s) with globals and blocking", globals))
@@ -58,7 +62,11 @@ for (cores in 1:min(3L, availableCores("multicore"))) {
   message(sprintf(" - Resolving %d multicore futures", length(x)))
 ##  if ("covr" %in% loadedNamespaces()) v <- 1:4 else ## WORKAROUND
   v <- sapply(x, FUN=value)
-  stopifnot(all(v == 1:4))
+  if (globals || inherits(f, "MulticoreFuture")) {
+    stopifnot(all(v == 1:4))
+  } else {
+    stopifnot(all(v == 4)) ## Because lazy evaluation w/out freezing globals
+  }
 
 
   message(sprintf("*** multicore(..., globals=%s) and errors", globals))

@@ -21,7 +21,7 @@
 #' @return A \link{MulticoreFuture}
 #' If \code{workers == 1}, then all processing using done in the
 #' current/main R session and we therefore fall back to using
-#' a eager future.  This is also the case whenever multicore
+#' a lazy future.  This is also the case whenever multicore
 #' processing is not supported, e.g. on Windows.
 #'
 #' @example incl/multicore.R
@@ -36,7 +36,7 @@
 #' Not all systems support multicore futures.  For instance,
 #' it is not supported on Microsoft Windows.  Trying to create
 #' multicore futures on non-supported systems will silently
-#' fall back to using \link{eager} futures, which effectively
+#' fall back to using \link{lazy} futures, which effectively
 #' corresponds to a multicore future that can handle one parallel
 #' process (the current one) before blocking.
 #'
@@ -71,12 +71,14 @@ multicore <- function(expr, envir=parent.frame(), substitute=TRUE, globals=TRUE,
   workers <- as.integer(workers)
   stopifnot(is.finite(workers), workers >= 1L)
 
-  ## Fall back to eager futures if only a single additional R process
+  ## Fall back to azy futures if only a single additional R process
   ## can be spawned off, i.e. then use the current main R process.
-  ## Eager futures best reflect how multicore futures handle globals.
+  ## Lazy futures is non-block just as multicore futures (which is not
+  ## the case for eager futures), cf. Issue #90.
+  ## WAS: ~~Eager futures best reflect how multicore futures handle globals~~.
   if (workers == 1L || !supportsMulticore()) {
     ## covr: skip=1
-    return(eager(expr, envir=envir, substitute=FALSE, globals=globals, local=TRUE))
+    return(lazy(expr, envir=envir, substitute=FALSE, globals=globals, local=TRUE))
   }
 
   oopts <- options(mc.cores=workers)
