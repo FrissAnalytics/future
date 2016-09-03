@@ -9,15 +9,15 @@
 |ui       |X11                          |
 |language |en                           |
 |collate  |en_US.UTF-8                  |
-|tz       |Europe/Stockholm             |
-|date     |2016-08-09                   |
+|tz       |SystemV/PST8PDT              |
+|date     |2016-09-02                   |
 
 ## Packages
 
 |package  |*  |version    |date       |source                            |
 |:--------|:--|:----------|:----------|:---------------------------------|
 |digest   |   |0.6.10     |2016-08-02 |cran (@0.6.10)                    |
-|future   |   |1.0.1-9000 |2016-08-09 |local (HenrikBengtsson/future@NA) |
+|future   |   |1.0.1-9000 |2016-09-03 |local (HenrikBengtsson/future@NA) |
 |globals  |   |0.6.1      |2016-02-03 |CRAN (R 3.3.1)                    |
 |listenv  |   |0.6.0      |2015-12-28 |CRAN (R 3.3.1)                    |
 |markdown |   |0.7.7      |2015-04-22 |CRAN (R 3.3.1)                    |
